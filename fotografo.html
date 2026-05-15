@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snapme — Portal Fotógrafo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-links a {
+      color: #999;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    /* Container central */
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 24px 40px;
+    }
+
+    /* Tela 1: Inserir código */
+    .login-card {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .login-card .label {
+      font-size: 13px;
+      color: #666;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .login-card h1 {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .login-card .subtitle {
+      color: #999;
+      font-size: 17px;
+      margin-bottom: 48px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .input-group input {
+      width: 100%;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 18px 20px;
+      color: #fff;
+      font-size: 16px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: #fff;
+    }
+
+    .input-group input::placeholder {
+      color: #444;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 18px;
+      border-radius: 100px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.02);
+      opacity: 0.92;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-msg {
+      color: #ff5252;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* Tela 2: Upload */
+    .upload-screen {
+      display: none;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .upload-screen.active {
+      display: block;
+    }
+
+    .event-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .event-badge {
+      display: inline-block;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .event-header h2 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+    }
+
+    .event-header p {
+      color: #888;
+      font-size: 15px;
+    }
+
+    .dropzone {
+      border: 2px dashed #1a1a1a;
+      border-radius: 24px;
+      padding: 80px 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background-color: #0a0a0a;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: #fff;
+      background-color: #0d0d0d;
+    }
+
+    .dropzone-icon {
+      font-size: 56px;
+      margin-bottom: 24px;
+      opacity: 0.5;
+    }
+
+    .dropzone h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .dropzone p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .dropzone input[type="file"] {
+      display: none;
+    }
+
+    /* Lista de ficheiros */
+    .file-list {
+      margin-top: 32px;
+      display: none;
+    }
+
+    .file-list.show {
+      display: block;
+    }
+
+    .file-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .file-list-header span {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .file-item .file-name {
+      color: #ccc;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 70%;
+    }
+
+    .file-item .file-status {
+      color: #4ade80;
+      font-size: 13px;
+    }
+
+    .upload-btn {
+      margin-top: 24px;
+    }
+
+    /* Logout */
+    .logout-link {
+      display: block;
+      text-align: center;
+      margin-top: 32px;
+      color: #555;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logout-link:hover {
+      color: #999;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        padding: 20px 24px;
+      }
+      .container {
+        padding: 90px 20px 40px;
+      }
+      .dropzone {
+        padding: 60px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Snapme</a>
+    <div class="nav-links">
+      <a href="index.html">← Voltar</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- TELA 1: Inserir código -->
+    <div class="login-card" id="loginScreen">
+      <div class="label">Portal Fotógrafo</div>
+      <h1>Insere o código do evento.</h1>
+      <p class="subtitle">Recebeste um código da organização do festival? Insere-o abaixo para começares a carregar fotos.</p>
+
+      <div class="input-group">
+        <label for="eventCode">Código do evento</label>
+        <input
+          type="text"
+          id="eventCode"
+          placeholder="ex: primavera-sound-2025"
+          autocomplete="off"
+        />
+      </div>
+
+      <button class="btn-primary" onclick="validarCodigo()">Entrar →</button>
+      <div class="error-msg" id="errorMsg">Código inválido. Verifica e tenta novamente.</div>
+    </div>
+
+    <!-- TELA 2: Upload -->
+    <div class="upload-screen" id="uploadScreen">
+      <div class="event-header">
+        <div class="event-badge">Evento ativo</div>
+        <h2 id="eventName">Primavera Sound 2025</h2>
+        <p>Arrasta as fotos para a zona abaixo ou clica para selecionar.</p>
+      </div>
+
+      <label for="fileInput" class="dropzone" id="dropzone">
+        <div class="dropzone-icon">📸</div>
+        <h3>Arrasta as fotos para aqui</h3>
+        <p>JPG, PNG · até 50MB por foto</p>
+        <input type="file" id="fileInput" multiple accept="image/*" />
+      </label>
+
+      <div class="file-list" id="fileList">
+        <div class="file-list-header">
+          <span id="fileCount">0 fotos selecionadas</span>
+        </div>
+        <div id="fileItems"></div>
+        <button class="btn-primary upload-btn" onclick="simularUpload()">Carregar fotos →</button>
+      </div>
+
+      <a class="logout-link" onclick="sair()">Sair</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Códigos válidos (por agora, hardcoded — depois virá da base de dados)
+    const eventosValidos = {
+      "primavera-sound-2025": "Primavera Sound 2025",
+      "nos-alive-2025": "NOS Alive 2025",
+      "meo-sudoeste-2025": "MEO Sudoeste 2025",
+      "rock-in-rio-2026": "Rock in Rio 2026"
+    };
+
+    function validarCodigo() {
+      const codigo = document.getElementById("eventCode").value.trim().toLowerCase();
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (eventosValidos[codigo]) {
+        // Código válido → mostrar tela de upload
+        document.getElementById("eventName").textContent = eventosValidos[codigo];
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("uploadScreen").classList.add("active");
+        errorMsg.classList.remove("show");
+      } else {
+        errorMsg.classList.add("show");
+      }
+    }
+
+    // Permitir Enter para submeter
+    document.getElementById("eventCode").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") validarCodigo();
+    });
+
+    // Drag & drop
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      const files = e.dataTransfer.files;
+      mostrarFicheiros(files);
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      mostrarFicheiros(e.target.files);
+    });
+
+    function mostrarFicheiros(files) {
+      const fileList = document.getElementById("fileList");
+      const fileItems = document.getElementById("fileItems");
+      const fileCount = document.getElementById("fileCount");
+
+      if (files.length === 0) return;
+
+      fileItems.innerHTML = "";
+      Array.from(files).forEach(file => {
+        const item = document.createElement("div");
+        item.className = "file-item";
+        item.innerHTML = `
+          <span class="file-name">${file.name}</span>
+          <span class="file-status">Pronto</span>
+        `;
+        fileItems.appendChild(item);
+      });
+
+      fileCount.textContent = `${files.length} foto${files.length > 1 ? "s" : ""} selecionada${files.length > 1 ? "s" : ""}`;
+      fileList.classList.add("show");
+    }
+
+    function simularUpload() {
+      alert("✅ Upload simulado!\n\nNuma fase posterior, as fotos serão enviadas para AWS S3 e processadas com reconhecimento facial.");
+    }
+
+    function sair() {
+      document.getElementById("uploadScreen").classList.remove("active");
+      document.getElementById("loginScreen").style.display = "block";
+      document.getElementById("eventCode").value = "";
+      document.getElementById("fileList").classList.remove("show");
+    }
+  </script>
+
+</body>
+</html>

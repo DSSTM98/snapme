@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snapme — Encontra-te no festival</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .logo { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+
+    .nav-links a {
+      color: #999;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .btn-photographer {
+      background: transparent;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-photographer:hover { border-color: #fff; }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -3px;
+      line-height: 1;
+      margin-bottom: 24px;
+      max-width: 1000px;
+    }
+
+    .hero h1 .highlight { color: #888; }
+
+    .hero p {
+      font-size: clamp(16px, 2vw, 22px);
+      color: #999;
+      max-width: 600px;
+      margin-bottom: 48px;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 100px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
+
+    .features {
+      padding: 120px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-bottom: 80px;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 40px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: #333;
+      transform: translateY(-4px);
+    }
+
+    .feature-number {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .feature-card h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-card p {
+      color: #888;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .partners {
+      padding: 80px 48px;
+      text-align: center;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    .partners p {
+      color: #666;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .partners-list {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      color: #444;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    footer {
+      padding: 40px 48px;
+      border-top: 1px solid #1a1a1a;
+      color: #555;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 20px 24px; }
+      .nav-links a:not(.btn-photographer) { display: none; }
+      .features { padding: 80px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Snapme</div>
+    <div class="nav-links">
+      <a href="#how">Como funciona</a>
+      <a href="#events">Eventos</a>
+      <a href="fotografo.html" class="btn-photographer">Sou fotógrafo</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Encontra-te <span class="highlight">no festival.</span></h1>
+    <p>Tira uma selfie. Recebe todas as tuas fotos profissionais em segundos.</p>
+    <a href="encontrar.html" class="btn-primary">Começar →</a>
+  </section>
+
+  <section class="features" id="how">
+    <h2>Simples assim.</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-number">01</div>
+        <h3>Escolhe o evento</h3>
+        <p>Seleciona o festival ou concerto onde estiveste.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-number">02</div>
+        <h3>Tira uma selfie</h3>
+        <p>A nossa tecnologia identifica-te em segundos entre milhares de fotos.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-number">03</div>
+        <h3>Recebe as tuas fotos</h3>
+        <p>Compra e descarrega em alta resolução, sem marca de água.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="partners" id="events">
+    <p>Parceiros</p>
+    <div class="partners-list">
+      <span>NOS Alive</span>
+      <span>Primavera Sound</span>
+      <span>MEO Sudoeste</span>
+      <span>Rock in Rio</span>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Snapme. Todos os direitos reservados.
+  </footer>
+
+</body>
+</html>

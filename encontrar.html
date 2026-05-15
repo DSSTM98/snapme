@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snapme — Encontra-te</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-links a {
+      color: #999;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .container {
+      min-height: 100vh;
+      padding: 100px 24px 40px;
+    }
+
+    .screen { display: none; max-width: 1100px; margin: 0 auto; }
+    .screen.active { display: block; }
+
+    .step-label {
+      font-size: 13px;
+      color: #666;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .step-title {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .step-subtitle {
+      color: #999;
+      font-size: 17px;
+      text-align: center;
+      margin-bottom: 56px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .event-card {
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-card:hover {
+      border-color: #fff;
+      transform: translateY(-4px);
+    }
+
+    .event-card .event-status {
+      display: inline-block;
+      background-color: #1a1a1a;
+      color: #4ade80;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+
+    .event-card h3 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .event-card .event-date {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .event-card .event-photos {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .event-card .event-arrow {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      color: #444;
+      font-size: 20px;
+      transition: color 0.3s;
+    }
+
+    .event-card:hover .event-arrow { color: #fff; }
+
+    .camera-wrapper {
+      max-width: 480px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .camera-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background-color: #0d0d0d;
+      border-radius: 32px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      border: 1px solid #1a1a1a;
+    }
+
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    #canvas { display: none; }
+
+    .camera-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .face-guide {
+      width: 60%;
+      aspect-ratio: 1;
+      border: 2px dashed rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+    }
+
+    .camera-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .camera-placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .camera-instructions {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .btn-capture {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 18px 48px;
+      border-radius: 100px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-capture:hover {
+      transform: scale(1.03);
+      opacity: 0.92;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #888;
+      border: 1px solid #1a1a1a;
+      padding: 16px 32px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+
+    .btn-secondary:hover {
+      border-color: #fff;
+      color: #fff;
+    }
+
+    .loading-screen {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .loading-screen h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .loading-screen p { color: #888; font-size: 16px; }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      border: 3px solid #1a1a1a;
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 32px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .results-header { text-align: center; margin-bottom: 48px; }
+
+    .results-count {
+      display: inline-block;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      color: #4ade80;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .photo-item {
+      aspect-ratio: 1;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .photo-item:hover { transform: scale(1.02); }
+
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .photo-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      color: rgba(255, 255, 255, 0.15);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .photo-price {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .purchase-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      color: #000;
+      padding: 16px 24px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 20px 50px rgba(255, 255, 255, 0.1);
+      z-index: 50;
+    }
+
+    .purchase-bar .info { font-size: 14px; }
+    .purchase-bar .info strong { font-size: 16px; }
+
+    .purchase-bar button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .purchase-bar button:hover { transform: scale(1.05); }
+
+    @media (max-width: 600px) {
+      nav { padding: 20px 24px; }
+      .container { padding: 90px 20px 120px; }
+      .purchase-bar {
+        left: 16px;
+        right: 16px;
+        transform: none;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Snapme</a>
+    <div class="nav-links">
+      <a href="index.html">← Voltar</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <div class="screen active" id="screen-events">
+      <div class="step-label">Passo 1 de 3</div>
+      <h1 class="step-title">Onde estiveste?</h1>
+      <p class="step-subtitle">Escolhe o evento para encontrarmos as tuas fotos.</p>
+
+      <div class="events-grid">
+        <div class="event-card" onclick="escolherEvento('Primavera Sound 2025')">
+          <span class="event-arrow">→</span>
+          <span class="event-status">● Ativo</span>
+          <h3>Primavera Sound</h3>
+          <div class="event-date">5–7 Junho 2025</div>
+          <div class="event-photos">12.847 fotos disponíveis</div>
+        </div>
+
+        <div class="event-card" onclick="escolherEvento('NOS Alive 2025')">
+          <span class="event-arrow">→</span>
+          <span class="event-status">● Ativo</span>
+          <h3>NOS Alive</h3>
+          <div class="event-date">10–12 Julho 2025</div>
+          <div class="event-photos">8.231 fotos disponíveis</div>
+        </div>
+
+        <div class="event-card" onclick="escolherEvento('MEO Sudoeste 2025')">
+          <span class="event-arrow">→</span>
+          <span class="event-status">● Ativo</span>
+          <h3>MEO Sudoeste</h3>
+          <div class="event-date">5–9 Agosto 2025</div>
+          <div class="event-photos">6.402 fotos disponíveis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-camera">
+      <div class="step-label">Passo 2 de 3</div>
+      <h1 class="step-title">Tira uma selfie.</h1>
+      <p class="step-subtitle">Centra a tua cara no círculo. Boa luz ajuda.</p>
+
+      <div class="camera-wrapper">
+        <div class="camera-box">
+          <video id="video" autoplay playsinline></video>
+          <canvas id="canvas"></canvas>
+          <div class="camera-overlay">
+            <div class="face-guide"></div>
+          </div>
+          <div class="camera-placeholder" id="cameraPlaceholder">
+            <div class="camera-placeholder-icon">📷</div>
+            <div>A pedir acesso à câmara...</div>
+          </div>
+        </div>
+
+        <p class="camera-instructions">A tua selfie é usada apenas para identificação. Não é guardada.</p>
+        <button class="btn-capture" id="captureBtn" onclick="capturarSelfie()">Tirar selfie</button>
+        <br />
+        <button class="btn-secondary" onclick="voltar('screen-events')">← Voltar</button>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-loading">
+      <div class="loading-screen">
+        <div class="spinner"></div>
+        <h2>A procurar-te...</h2>
+        <p>A analisar milhares de fotos. Demora alguns segundos.</p>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-results">
+      <div class="results-header">
+        <span class="results-count">● 8 fotos encontradas</span>
+        <h1 class="step-title">Encontrámos-te.</h1>
+        <p class="step-subtitle">Estas são as fotos onde apareces. Compra para descarregar em alta resolução, sem marca de água.</p>
+      </div>
+
+      <div class="photos-grid" id="photosGrid"></div>
+    </div>
+
+  </div>
+
+  <div class="purchase-bar" id="purchaseBar" style="display:none;">
+    <div class="info">
+      <div>Pack completo</div>
+      <strong>8 fotos · 15€</strong>
+    </div>
+    <button onclick="comprar()">Comprar →</button>
+  </div>
+
+  <script>
+    let stream = null;
+
+    function mostrarTela(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.getElementById("purchaseBar").style.display = id === "screen-results" ? "flex" : "none";
+    }
+
+    function escolherEvento(nome) {
+      console.log("Festival escolhido:", nome);
+      mostrarTela("screen-camera");
+      iniciarCamara();
+    }
+
+    async function iniciarCamara() {
+      const video = document.getElementById("video");
+      const placeholder = document.getElementById("cameraPlaceholder");
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: false
+        });
+        video.srcObject = stream;
+        placeholder.style.display = "none";
+      } catch (err) {
+        console.error("Erro câmara:", err);
+        placeholder.innerHTML = `
+          <div class="camera-placeholder-icon">⚠️</div>
+          <div>Não conseguimos aceder à câmara.<br />Verifica as permissões do browser.</div>
+        `;
+      }
+    }
+
+    function pararCamara() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+    }
+
+    function capturarSelfie() {
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+
+      pararCamara();
+      mostrarTela("screen-loading");
+
+      setTimeout(() => {
+        gerarResultados();
+        mostrarTela("screen-results");
+      }, 3000);
+    }
+
+    function gerarResultados() {
+      const grid = document.getElementById("photosGrid");
+      grid.innerHTML = "";
+      for (let i = 1; i <= 8; i++) {
+        const photo = document.createElement("div");
+        photo.className = "photo-item";
+        photo.innerHTML = `
+          <div class="photo-placeholder">Foto ${i}</div>
+          <div class="photo-watermark">SNAPME</div>
+          <div class="photo-price">3€</div>
+        `;
+        grid.appendChild(photo);
+      }
+    }
+
+    function voltar(destino) {
+      pararCamara();
+      mostrarTela(destino);
+    }
+
+    function comprar() {
+      window.location.href = "checkout.html";
+    }
+  </script>
+
+</body>
+</html>
