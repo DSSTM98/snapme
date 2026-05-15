@@ -57,11 +57,7 @@
 
     .btn-photographer:hover { border-color: #fff; }
 
-    /* Language selector */
-    .lang-selector {
-      position: relative;
-      display: inline-block;
-    }
+    .lang-selector { position: relative; display: inline-block; }
 
     .lang-current {
       background: transparent;
@@ -108,7 +104,6 @@
     }
 
     .lang-option:hover { background-color: #1a1a1a; color: #fff; }
-    .lang-option.active { color: #fff; background-color: #1a1a1a; }
 
     .hero {
       min-height: 100vh;
@@ -153,10 +148,7 @@
       transition: transform 0.2s, opacity 0.2s;
     }
 
-    .btn-primary:hover {
-      transform: scale(1.03);
-      opacity: 0.9;
-    }
+    .btn-primary:hover { transform: scale(1.03); opacity: 0.9; }
 
     .features {
       padding: 120px 48px;
@@ -211,50 +203,6 @@
       line-height: 1.6;
     }
 
-    .partners {
-      padding: 80px 48px;
-      text-align: center;
-      border-top: 1px solid #1a1a1a;
-    }
-
-    .partners p {
-      color: #666;
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 48px;
-    }
-
-    .partners-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 32px;
-      max-width: 1100px;
-      margin: 0 auto;
-      align-items: center;
-    }
-
-    .partner-logo {
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      filter: grayscale(1) brightness(2);
-      opacity: 0.6;
-      transition: opacity 0.3s, filter 0.3s;
-    }
-
-    .partner-logo:hover {
-      opacity: 1;
-      filter: grayscale(0) brightness(1);
-    }
-
-    .partner-logo img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-    }
-
     footer {
       padding: 40px 48px;
       border-top: 1px solid #1a1a1a;
@@ -268,7 +216,6 @@
       .nav-links { gap: 12px; }
       .nav-links a:not(.btn-photographer):not(.lang-current) { display: none; }
       .features { padding: 80px 24px; }
-      .partners-grid { gap: 24px; }
     }
   </style>
 </head>
@@ -278,7 +225,6 @@
     <div class="logo">SnapMe</div>
     <div class="nav-links">
       <a href="#how" data-i18n="nav_how">Como funciona</a>
-      <a href="#partners" data-i18n="nav_partners">Parceiros</a>
       <a href="fotografo.html" class="btn-photographer" data-i18n="nav_photographer">Sou fotógrafo</a>
 
       <div class="lang-selector">
@@ -322,29 +268,14 @@
     </div>
   </section>
 
-  <section class="partners" id="partners">
-    <p data-i18n="partners_label">Parceiros</p>
-    <div class="partners-grid">
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/NOS_Alive_Logo.svg/320px-NOS_Alive_Logo.svg.png" alt="NOS Alive" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Primavera_Sound_logo.svg/320px-Primavera_Sound_logo.svg.png" alt="Primavera Sound" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/MEO_Sudoeste_logo.png/320px-MEO_Sudoeste_logo.png" alt="MEO Sudoeste" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rock_in_Rio_logo.svg/320px-Rock_in_Rio_logo.svg.png" alt="Rock in Rio" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/FC_Porto.svg/240px-FC_Porto.svg.png" alt="FC Porto" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/SL_Benfica_logo.svg/240px-SL_Benfica_logo.svg.png" alt="SL Benfica" /></div>
-      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3e/Sporting_Clube_de_Portugal_%28Logo%29.svg/240px-Sporting_Clube_de_Portugal_%28Logo%29.svg.png" alt="Sporting CP" /></div>
-    </div>
-  </section>
-
   <footer>
     © 2025 SnapMe. <span data-i18n="footer_rights">Todos os direitos reservados.</span>
   </footer>
 
   <script>
-    // ============ TRADUÇÕES ============
     const translations = {
       pt: {
         nav_how: "Como funciona",
-        nav_partners: "Parceiros",
         nav_photographer: "Sou fotógrafo",
         hero_title_1: "Encontra-te",
         hero_title_2: "no evento.",
@@ -357,12 +288,10 @@
         feature_2_text: "A nossa tecnologia identifica-te em segundos entre milhares de fotos.",
         feature_3_title: "Recebe as tuas fotos",
         feature_3_text: "Compra e descarrega em alta resolução, sem marca de água.",
-        partners_label: "Parceiros",
         footer_rights: "Todos os direitos reservados."
       },
       en: {
         nav_how: "How it works",
-        nav_partners: "Partners",
         nav_photographer: "I'm a photographer",
         hero_title_1: "Find yourself",
         hero_title_2: "at the event.",
@@ -375,12 +304,10 @@
         feature_2_text: "Our tech identifies you in seconds across thousands of photos.",
         feature_3_title: "Get your photos",
         feature_3_text: "Buy and download in high resolution, no watermark.",
-        partners_label: "Partners",
         footer_rights: "All rights reserved."
       },
       es: {
         nav_how: "Cómo funciona",
-        nav_partners: "Socios",
         nav_photographer: "Soy fotógrafo",
         hero_title_1: "Encuéntrate",
         hero_title_2: "en el evento.",
@@ -393,7 +320,6 @@
         feature_2_text: "Nuestra tecnología te identifica en segundos entre miles de fotos.",
         feature_3_title: "Recibe tus fotos",
         feature_3_text: "Compra y descarga en alta resolución, sin marca de agua.",
-        partners_label: "Socios",
         footer_rights: "Todos los derechos reservados."
       }
     };
@@ -412,7 +338,6 @@
         if (translations[lang][key]) el.textContent = translations[lang][key];
       });
 
-      document.querySelectorAll(".lang-option").forEach(opt => opt.classList.remove("active"));
       document.getElementById("langDropdown").classList.remove("show");
     }
 
@@ -425,7 +350,6 @@
       document.getElementById("langDropdown").classList.remove("show");
     });
 
-    // Carregar idioma guardado
     const savedLang = localStorage.getItem("snapme_lang") || "pt";
     setLang(savedLang);
   </script>

@@ -129,10 +129,9 @@
       line-height: 1.5;
     }
 
-    /* Search bar */
     .search-wrapper {
       max-width: 560px;
-      margin: 0 auto 40px;
+      margin: 0 auto 32px;
       position: relative;
     }
 
@@ -162,7 +161,6 @@
       pointer-events: none;
     }
 
-    /* Event categories filter */
     .filters {
       display: flex;
       gap: 8px;
@@ -267,7 +265,6 @@
       font-size: 15px;
     }
 
-    /* Camera */
     .camera-wrapper {
       max-width: 480px;
       margin: 0 auto;
@@ -388,7 +385,6 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Results */
     .results-header { text-align: center; margin-bottom: 32px; }
 
     .results-count {
@@ -404,7 +400,6 @@
       margin-bottom: 16px;
     }
 
-    /* Pack offer banner */
     .pack-banner {
       max-width: 800px;
       margin: 0 auto 32px;
@@ -556,7 +551,6 @@
       font-weight: 600;
     }
 
-    /* Purchase bar */
     .purchase-bar {
       position: fixed;
       bottom: 24px;
@@ -627,7 +621,6 @@
 
   <div class="container">
 
-    <!-- TELA 1: Eventos -->
     <div class="screen active" id="screen-events">
       <div class="step-label" data-i18n="step_1">Passo 1 de 3</div>
       <h1 class="step-title" data-i18n="events_title">Onde estiveste?</h1>
@@ -647,18 +640,16 @@
 
       <div class="filters">
         <button class="filter-chip active" data-filter="all" onclick="filtrarPorTipo('all', this)" data-i18n="filter_all">Todos</button>
-        <button class="filter-chip" data-filter="festival" onclick="filtrarPorTipo('festival', this)" data-i18n="filter_festival">Festivais</button>
+        <button class="filter-chip" data-filter="festival" onclick="filtrarPorTipo('festival', this)" data-i18n="filter_festival">Festivais Musicais</button>
         <button class="filter-chip" data-filter="concerto" onclick="filtrarPorTipo('concerto', this)" data-i18n="filter_concert">Concertos</button>
-        <button class="filter-chip" data-filter="desporto" onclick="filtrarPorTipo('desporto', this)" data-i18n="filter_sports">Desporto</button>
-        <button class="filter-chip" data-filter="festa" onclick="filtrarPorTipo('festa', this)" data-i18n="filter_party">Festas</button>
-        <button class="filter-chip" data-filter="teatro" onclick="filtrarPorTipo('teatro', this)" data-i18n="filter_theatre">Teatro</button>
+        <button class="filter-chip" data-filter="futebol" onclick="filtrarPorTipo('futebol', this)" data-i18n="filter_football">Futebol</button>
+        <button class="filter-chip" data-filter="outros" onclick="filtrarPorTipo('outros', this)" data-i18n="filter_other">Outros</button>
       </div>
 
       <div class="events-grid" id="eventsGrid"></div>
       <div class="no-results" id="noResults" style="display:none;" data-i18n="no_results">Nenhum evento encontrado.</div>
     </div>
 
-    <!-- TELA 2: Câmara -->
     <div class="screen" id="screen-camera">
       <div class="step-label" data-i18n="step_2">Passo 2 de 3</div>
       <h1 class="step-title" data-i18n="camera_title">Tira uma selfie.</h1>
@@ -682,7 +673,6 @@
       </div>
     </div>
 
-    <!-- TELA 3: Loading -->
     <div class="screen" id="screen-loading">
       <div class="loading-screen">
         <div class="spinner"></div>
@@ -691,7 +681,6 @@
       </div>
     </div>
 
-    <!-- TELA 4: Resultados -->
     <div class="screen" id="screen-results">
       <div class="results-header">
         <span class="results-count"><span id="totalFotos">0</span> <span data-i18n="results_count">fotos encontradas</span></span>
@@ -726,16 +715,17 @@
 
   <script>
     // ============ DADOS ============
+    // Datas guardadas em formato estruturado para tradução automática
     const eventos = [
-      { id: 1, nome: "Primavera Sound", data: "5–7 Junho 2025", fotos: 12847, tipo: "festival", status: "ativo" },
-      { id: 2, nome: "NOS Alive", data: "10–12 Julho 2025", fotos: 8231, tipo: "festival", status: "ativo" },
-      { id: 3, nome: "MEO Sudoeste", data: "5–9 Agosto 2025", fotos: 6402, tipo: "festival", status: "ativo" },
-      { id: 4, nome: "Rock in Rio Lisboa", data: "21–29 Junho 2026", fotos: 0, tipo: "festival", status: "ativo" },
-      { id: 5, nome: "FC Porto vs SL Benfica", data: "12 Outubro 2025", fotos: 4521, tipo: "desporto", status: "ativo" },
-      { id: 6, nome: "Sporting CP vs FC Porto", data: "28 Setembro 2025", fotos: 3892, tipo: "desporto", status: "ativo" },
-      { id: 7, nome: "Coldplay no Estádio Nacional", data: "20 Maio 2026", fotos: 9123, tipo: "concerto", status: "ativo" },
-      { id: 8, nome: "Sunset Boat Party Lisboa", data: "Todas as Sextas", fotos: 1247, tipo: "festa", status: "ativo" },
-      { id: 9, nome: "Os Lusíadas — Teatro D. Maria II", data: "Setembro 2025", fotos: 412, tipo: "teatro", status: "ativo" }
+      { id: 1, nome: "Primavera Sound", dataInicio: "2025-06-05", dataFim: "2025-06-07", fotos: 12847, tipo: "festival" },
+      { id: 2, nome: "NOS Alive", dataInicio: "2025-07-10", dataFim: "2025-07-12", fotos: 8231, tipo: "festival" },
+      { id: 3, nome: "MEO Sudoeste", dataInicio: "2025-08-05", dataFim: "2025-08-09", fotos: 6402, tipo: "festival" },
+      { id: 4, nome: "Rock in Rio Lisboa", dataInicio: "2026-06-21", dataFim: "2026-06-29", fotos: 0, tipo: "festival" },
+      { id: 5, nome: "FC Porto vs SL Benfica", dataInicio: "2025-10-12", fotos: 4521, tipo: "futebol" },
+      { id: 6, nome: "Sporting CP vs FC Porto", dataInicio: "2025-09-28", fotos: 3892, tipo: "futebol" },
+      { id: 7, nome: "Coldplay no Estádio Nacional", dataInicio: "2026-05-20", fotos: 9123, tipo: "concerto" },
+      { id: 8, nome: "Sunset Boat Party Lisboa", dataRecorrente: "sextas", fotos: 1247, tipo: "outros" },
+      { id: 9, nome: "Os Lusíadas — Teatro D. Maria II", dataMes: "2025-09", fotos: 412, tipo: "outros" }
     ];
 
     let filtroAtual = "all";
@@ -755,8 +745,11 @@
         events_title: "Onde estiveste?",
         events_subtitle: "Escolhe o evento para encontrarmos as tuas fotos.",
         search_placeholder: "Pesquisa por nome do evento...",
-        filter_all: "Todos", filter_festival: "Festivais", filter_concert: "Concertos",
-        filter_sports: "Desporto", filter_party: "Festas", filter_theatre: "Teatro",
+        filter_all: "Todos",
+        filter_festival: "Festivais Musicais",
+        filter_concert: "Concertos",
+        filter_football: "Futebol",
+        filter_other: "Outros",
         no_results: "Nenhum evento encontrado.",
         camera_title: "Tira uma selfie.",
         camera_subtitle: "Centra a tua cara no círculo. Boa luz ajuda.",
@@ -776,7 +769,11 @@
         bar_btn: "Comprar →",
         ativo: "Ativo", fotos_disponiveis: "fotos disponíveis",
         type_festival: "Festival", type_concerto: "Concerto",
-        type_desporto: "Desporto", type_festa: "Festa", type_teatro: "Teatro"
+        type_futebol: "Futebol", type_outros: "Outros",
+        meses: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+        mesesCurtos: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+        recorrente_sextas: "Todas as Sextas",
+        every: "Todos os"
       },
       en: {
         nav_back: "← Back",
@@ -784,8 +781,11 @@
         events_title: "Where were you?",
         events_subtitle: "Pick your event so we can find your photos.",
         search_placeholder: "Search by event name...",
-        filter_all: "All", filter_festival: "Festivals", filter_concert: "Concerts",
-        filter_sports: "Sports", filter_party: "Parties", filter_theatre: "Theatre",
+        filter_all: "All",
+        filter_festival: "Music Festivals",
+        filter_concert: "Concerts",
+        filter_football: "Football",
+        filter_other: "Other",
         no_results: "No events found.",
         camera_title: "Take a selfie.",
         camera_subtitle: "Center your face in the circle. Good light helps.",
@@ -805,7 +805,11 @@
         bar_btn: "Buy →",
         ativo: "Active", fotos_disponiveis: "photos available",
         type_festival: "Festival", type_concerto: "Concert",
-        type_desporto: "Sports", type_festa: "Party", type_teatro: "Theatre"
+        type_futebol: "Football", type_outros: "Other",
+        meses: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+        mesesCurtos: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+        recorrente_sextas: "Every Friday",
+        every: "Every"
       },
       es: {
         nav_back: "← Volver",
@@ -813,8 +817,11 @@
         events_title: "¿Dónde estuviste?",
         events_subtitle: "Elige el evento para encontrar tus fotos.",
         search_placeholder: "Busca por nombre del evento...",
-        filter_all: "Todos", filter_festival: "Festivales", filter_concert: "Conciertos",
-        filter_sports: "Deportes", filter_party: "Fiestas", filter_theatre: "Teatro",
+        filter_all: "Todos",
+        filter_festival: "Festivales de Música",
+        filter_concert: "Conciertos",
+        filter_football: "Fútbol",
+        filter_other: "Otros",
         no_results: "No se encontraron eventos.",
         camera_title: "Hazte un selfie.",
         camera_subtitle: "Centra tu cara en el círculo. Buena luz ayuda.",
@@ -834,7 +841,11 @@
         bar_btn: "Comprar →",
         ativo: "Activo", fotos_disponiveis: "fotos disponibles",
         type_festival: "Festival", type_concerto: "Concierto",
-        type_desporto: "Deportes", type_festa: "Fiesta", type_teatro: "Teatro"
+        type_futebol: "Fútbol", type_outros: "Otros",
+        meses: ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+        mesesCurtos: ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+        recorrente_sextas: "Todos los Viernes",
+        every: "Todos los"
       }
     };
 
@@ -872,7 +883,57 @@
       document.getElementById("langDropdown").classList.remove("show");
     });
 
-    // ============ EVENTOS ============
+    // ============ FORMATAÇÃO DE DATAS POR IDIOMA ============
+    function formatarData(evento) {
+      const t = translations[currentLang];
+
+      // Recorrente (ex: "Todas as Sextas")
+      if (evento.dataRecorrente === "sextas") {
+        return t.recorrente_sextas;
+      }
+
+      // Mês inteiro (ex: "Setembro 2025")
+      if (evento.dataMes) {
+        const [ano, mes] = evento.dataMes.split("-");
+        return `${t.meses[parseInt(mes) - 1]} ${ano}`;
+      }
+
+      // Data única (ex: "12 Outubro 2025" ou "October 12, 2025")
+      if (evento.dataInicio && !evento.dataFim) {
+        const d = new Date(evento.dataInicio);
+        const dia = d.getDate();
+        const mes = t.meses[d.getMonth()];
+        const ano = d.getFullYear();
+
+        if (currentLang === "en") return `${mes} ${dia}, ${ano}`;
+        return `${dia} ${mes} ${ano}`;
+      }
+
+      // Intervalo de datas (ex: "5–7 Junho 2025" ou "June 5–7, 2025")
+      if (evento.dataInicio && evento.dataFim) {
+        const ini = new Date(evento.dataInicio);
+        const fim = new Date(evento.dataFim);
+        const diaIni = ini.getDate();
+        const diaFim = fim.getDate();
+        const mesIni = ini.getMonth();
+        const mesFim = fim.getMonth();
+        const ano = fim.getFullYear();
+
+        // Mesmo mês
+        if (mesIni === mesFim) {
+          if (currentLang === "en") return `${t.meses[mesIni]} ${diaIni}–${diaFim}, ${ano}`;
+          return `${diaIni}–${diaFim} ${t.meses[mesIni]} ${ano}`;
+        }
+
+        // Meses diferentes
+        if (currentLang === "en") return `${t.mesesCurtos[mesIni]} ${diaIni} – ${t.mesesCurtos[mesFim]} ${diaFim}, ${ano}`;
+        return `${diaIni} ${t.mesesCurtos[mesIni]} – ${diaFim} ${t.mesesCurtos[mesFim]} ${ano}`;
+      }
+
+      return "";
+    }
+
+    // ============ RENDER EVENTOS ============
     function renderEventos() {
       const grid = document.getElementById("eventsGrid");
       const noResults = document.getElementById("noResults");
@@ -894,6 +955,7 @@
 
       filtrados.forEach(e => {
         const tipoLabel = t["type_" + e.tipo];
+        const dataFormatada = formatarData(e);
         const card = document.createElement("div");
         card.className = "event-card";
         card.onclick = () => escolherEvento(e);
@@ -902,7 +964,7 @@
           <span class="event-status">● ${t.ativo}</span>
           <div class="event-type">${tipoLabel}</div>
           <h3>${e.nome}</h3>
-          <div class="event-date">${e.data}</div>
+          <div class="event-date">${dataFormatada}</div>
           <div class="event-photos">${e.fotos.toLocaleString()} ${t.fotos_disponiveis}</div>
         `;
         grid.appendChild(card);
@@ -966,7 +1028,6 @@
     }
 
     function gerarResultados() {
-      // Simular nº aleatório de fotos (entre 3 e 12)
       totalFotosEncontradas = Math.floor(Math.random() * 10) + 3;
       fotosSelecionadas.clear();
       document.getElementById("totalFotos").textContent = totalFotosEncontradas;
@@ -1017,7 +1078,6 @@
       const precoIndividual = totalFotosEncontradas * PRECO_FOTO;
       const poupanca = precoIndividual - PRECO_PACK;
 
-      // Só mostra se compensa o pack (ou seja, se tem mais de 5 fotos)
       if (totalFotosEncontradas >= 6) {
         banner.style.display = "flex";
         document.getElementById("packSaving").textContent = poupanca;
@@ -1062,7 +1122,6 @@
       const aplicarPack = n === totalFotosEncontradas && totalFotosEncontradas >= 6;
       const total = aplicarPack ? PRECO_PACK : n * PRECO_FOTO;
 
-      // Guardar para o checkout
       sessionStorage.setItem("snapme_purchase", JSON.stringify({
         evento: eventoSelecionado?.nome || "",
         fotos: n,
