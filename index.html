@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snapme — Encontra-te no festival</title>
+  <title>SnapMe — Encontra-te no evento</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -29,7 +29,7 @@
 
     .logo { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
 
-    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
 
     .nav-links a {
       color: #999;
@@ -56,6 +56,59 @@
     }
 
     .btn-photographer:hover { border-color: #fff; }
+
+    /* Language selector */
+    .lang-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .lang-current {
+      background: transparent;
+      border: 1px solid #1a1a1a;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .lang-current:hover { border-color: #333; }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 6px;
+      min-width: 140px;
+      display: none;
+      z-index: 200;
+    }
+
+    .lang-dropdown.show { display: block; }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .lang-option:hover { background-color: #1a1a1a; color: #fff; }
+    .lang-option.active { color: #fff; background-color: #1a1a1a; }
 
     .hero {
       min-height: 100vh;
@@ -169,17 +222,37 @@
       font-size: 13px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 32px;
+      margin-bottom: 48px;
     }
 
-    .partners-list {
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .partner-logo {
+      height: 60px;
       display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-      color: #444;
-      font-size: 20px;
-      font-weight: 600;
+      filter: grayscale(1) brightness(2);
+      opacity: 0.6;
+      transition: opacity 0.3s, filter 0.3s;
+    }
+
+    .partner-logo:hover {
+      opacity: 1;
+      filter: grayscale(0) brightness(1);
+    }
+
+    .partner-logo img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
     }
 
     footer {
@@ -191,63 +264,171 @@
     }
 
     @media (max-width: 600px) {
-      nav { padding: 20px 24px; }
-      .nav-links a:not(.btn-photographer) { display: none; }
+      nav { padding: 20px 16px; gap: 8px; }
+      .nav-links { gap: 12px; }
+      .nav-links a:not(.btn-photographer):not(.lang-current) { display: none; }
       .features { padding: 80px 24px; }
+      .partners-grid { gap: 24px; }
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <div class="logo">Snapme</div>
+    <div class="logo">SnapMe</div>
     <div class="nav-links">
-      <a href="#how">Como funciona</a>
-      <a href="#events">Eventos</a>
-      <a href="fotografo.html" class="btn-photographer">Sou fotógrafo</a>
+      <a href="#how" data-i18n="nav_how">Como funciona</a>
+      <a href="#partners" data-i18n="nav_partners">Parceiros</a>
+      <a href="fotografo.html" class="btn-photographer" data-i18n="nav_photographer">Sou fotógrafo</a>
+
+      <div class="lang-selector">
+        <button class="lang-current" onclick="toggleLangDropdown(event)">
+          <span id="currentLangFlag">🇵🇹</span>
+          <span id="currentLangCode">PT</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
+          <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
+          <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
+        </div>
+      </div>
     </div>
   </nav>
 
   <section class="hero">
-    <h1>Encontra-te <span class="highlight">no festival.</span></h1>
-    <p>Tira uma selfie. Recebe todas as tuas fotos profissionais em segundos.</p>
-    <a href="encontrar.html" class="btn-primary">Começar →</a>
+    <h1><span data-i18n="hero_title_1">Encontra-te</span> <span class="highlight" data-i18n="hero_title_2">no evento.</span></h1>
+    <p data-i18n="hero_subtitle">Tira uma selfie. Recebe todas as tuas fotos profissionais em segundos.</p>
+    <a href="encontrar.html" class="btn-primary" data-i18n="hero_cta">Começar →</a>
   </section>
 
   <section class="features" id="how">
-    <h2>Simples assim.</h2>
+    <h2 data-i18n="features_title">Simples assim.</h2>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-number">01</div>
-        <h3>Escolhe o evento</h3>
-        <p>Seleciona o festival ou concerto onde estiveste.</p>
+        <h3 data-i18n="feature_1_title">Escolhe o evento</h3>
+        <p data-i18n="feature_1_text">Festivais, concertos, jogos, teatro, festas. Onde quer que tenhas estado.</p>
       </div>
       <div class="feature-card">
         <div class="feature-number">02</div>
-        <h3>Tira uma selfie</h3>
-        <p>A nossa tecnologia identifica-te em segundos entre milhares de fotos.</p>
+        <h3 data-i18n="feature_2_title">Tira uma selfie</h3>
+        <p data-i18n="feature_2_text">A nossa tecnologia identifica-te em segundos entre milhares de fotos.</p>
       </div>
       <div class="feature-card">
         <div class="feature-number">03</div>
-        <h3>Recebe as tuas fotos</h3>
-        <p>Compra e descarrega em alta resolução, sem marca de água.</p>
+        <h3 data-i18n="feature_3_title">Recebe as tuas fotos</h3>
+        <p data-i18n="feature_3_text">Compra e descarrega em alta resolução, sem marca de água.</p>
       </div>
     </div>
   </section>
 
-  <section class="partners" id="events">
-    <p>Parceiros</p>
-    <div class="partners-list">
-      <span>NOS Alive</span>
-      <span>Primavera Sound</span>
-      <span>MEO Sudoeste</span>
-      <span>Rock in Rio</span>
+  <section class="partners" id="partners">
+    <p data-i18n="partners_label">Parceiros</p>
+    <div class="partners-grid">
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/NOS_Alive_Logo.svg/320px-NOS_Alive_Logo.svg.png" alt="NOS Alive" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Primavera_Sound_logo.svg/320px-Primavera_Sound_logo.svg.png" alt="Primavera Sound" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/MEO_Sudoeste_logo.png/320px-MEO_Sudoeste_logo.png" alt="MEO Sudoeste" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rock_in_Rio_logo.svg/320px-Rock_in_Rio_logo.svg.png" alt="Rock in Rio" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/FC_Porto.svg/240px-FC_Porto.svg.png" alt="FC Porto" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/SL_Benfica_logo.svg/240px-SL_Benfica_logo.svg.png" alt="SL Benfica" /></div>
+      <div class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3e/Sporting_Clube_de_Portugal_%28Logo%29.svg/240px-Sporting_Clube_de_Portugal_%28Logo%29.svg.png" alt="Sporting CP" /></div>
     </div>
   </section>
 
   <footer>
-    © 2025 Snapme. Todos os direitos reservados.
+    © 2025 SnapMe. <span data-i18n="footer_rights">Todos os direitos reservados.</span>
   </footer>
+
+  <script>
+    // ============ TRADUÇÕES ============
+    const translations = {
+      pt: {
+        nav_how: "Como funciona",
+        nav_partners: "Parceiros",
+        nav_photographer: "Sou fotógrafo",
+        hero_title_1: "Encontra-te",
+        hero_title_2: "no evento.",
+        hero_subtitle: "Tira uma selfie. Recebe todas as tuas fotos profissionais em segundos.",
+        hero_cta: "Começar →",
+        features_title: "Simples assim.",
+        feature_1_title: "Escolhe o evento",
+        feature_1_text: "Festivais, concertos, jogos, teatro, festas. Onde quer que tenhas estado.",
+        feature_2_title: "Tira uma selfie",
+        feature_2_text: "A nossa tecnologia identifica-te em segundos entre milhares de fotos.",
+        feature_3_title: "Recebe as tuas fotos",
+        feature_3_text: "Compra e descarrega em alta resolução, sem marca de água.",
+        partners_label: "Parceiros",
+        footer_rights: "Todos os direitos reservados."
+      },
+      en: {
+        nav_how: "How it works",
+        nav_partners: "Partners",
+        nav_photographer: "I'm a photographer",
+        hero_title_1: "Find yourself",
+        hero_title_2: "at the event.",
+        hero_subtitle: "Take a selfie. Get all your professional photos in seconds.",
+        hero_cta: "Get started →",
+        features_title: "It's that simple.",
+        feature_1_title: "Pick your event",
+        feature_1_text: "Festivals, concerts, games, theatre, parties. Wherever you've been.",
+        feature_2_title: "Take a selfie",
+        feature_2_text: "Our tech identifies you in seconds across thousands of photos.",
+        feature_3_title: "Get your photos",
+        feature_3_text: "Buy and download in high resolution, no watermark.",
+        partners_label: "Partners",
+        footer_rights: "All rights reserved."
+      },
+      es: {
+        nav_how: "Cómo funciona",
+        nav_partners: "Socios",
+        nav_photographer: "Soy fotógrafo",
+        hero_title_1: "Encuéntrate",
+        hero_title_2: "en el evento.",
+        hero_subtitle: "Hazte un selfie. Recibe todas tus fotos profesionales en segundos.",
+        hero_cta: "Empezar →",
+        features_title: "Así de simple.",
+        feature_1_title: "Elige tu evento",
+        feature_1_text: "Festivales, conciertos, partidos, teatro, fiestas. Donde sea que hayas estado.",
+        feature_2_title: "Hazte un selfie",
+        feature_2_text: "Nuestra tecnología te identifica en segundos entre miles de fotos.",
+        feature_3_title: "Recibe tus fotos",
+        feature_3_text: "Compra y descarga en alta resolución, sin marca de agua.",
+        partners_label: "Socios",
+        footer_rights: "Todos los derechos reservados."
+      }
+    };
+
+    const flags = { pt: "🇵🇹", en: "🇬🇧", es: "🇪🇸" };
+    const codes = { pt: "PT", en: "EN", es: "ES" };
+
+    function setLang(lang) {
+      localStorage.setItem("snapme_lang", lang);
+      document.documentElement.lang = lang;
+      document.getElementById("currentLangFlag").textContent = flags[lang];
+      document.getElementById("currentLangCode").textContent = codes[lang];
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+
+      document.querySelectorAll(".lang-option").forEach(opt => opt.classList.remove("active"));
+      document.getElementById("langDropdown").classList.remove("show");
+    }
+
+    function toggleLangDropdown(event) {
+      event.stopPropagation();
+      document.getElementById("langDropdown").classList.toggle("show");
+    }
+
+    document.addEventListener("click", () => {
+      document.getElementById("langDropdown").classList.remove("show");
+    });
+
+    // Carregar idioma guardado
+    const savedLang = localStorage.getItem("snapme_lang") || "pt";
+    setLang(savedLang);
+  </script>
 
 </body>
 </html>

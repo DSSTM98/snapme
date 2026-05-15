@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snapme — Encontra-te</title>
+  <title>SnapMe — Encontra-te</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -35,14 +35,62 @@
       color: #fff;
     }
 
-    .nav-links a {
+    .nav-right { display: flex; gap: 16px; align-items: center; }
+
+    .nav-right a {
       color: #999;
       text-decoration: none;
       font-size: 15px;
       font-weight: 500;
     }
 
-    .nav-links a:hover { color: #fff; }
+    .nav-right a:hover { color: #fff; }
+
+    .lang-selector { position: relative; }
+
+    .lang-current {
+      background: transparent;
+      border: 1px solid #1a1a1a;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .lang-current:hover { border-color: #333; }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 6px;
+      min-width: 140px;
+      display: none;
+      z-index: 200;
+    }
+
+    .lang-dropdown.show { display: block; }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .lang-option:hover { background-color: #1a1a1a; color: #fff; }
 
     .container {
       min-height: 100vh;
@@ -74,12 +122,69 @@
       color: #999;
       font-size: 17px;
       text-align: center;
-      margin-bottom: 56px;
+      margin-bottom: 40px;
       max-width: 560px;
       margin-left: auto;
       margin-right: auto;
       line-height: 1.5;
     }
+
+    /* Search bar */
+    .search-wrapper {
+      max-width: 560px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 100px;
+      padding: 16px 20px 16px 52px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: #fff; }
+    .search-input::placeholder { color: #555; }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #555;
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    /* Event categories filter */
+    .filters {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .filter-chip {
+      background-color: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      color: #888;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .filter-chip:hover { border-color: #333; color: #fff; }
+    .filter-chip.active { background-color: #fff; color: #000; border-color: #fff; }
 
     .events-grid {
       display: grid;
@@ -114,11 +219,20 @@
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.5px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+    }
+
+    .event-card .event-type {
+      display: inline-block;
+      color: #666;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
     .event-card h3 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: -1px;
       margin-bottom: 8px;
@@ -146,6 +260,14 @@
 
     .event-card:hover .event-arrow { color: #fff; }
 
+    .no-results {
+      text-align: center;
+      color: #555;
+      padding: 60px 20px;
+      font-size: 15px;
+    }
+
+    /* Camera */
     .camera-wrapper {
       max-width: 480px;
       margin: 0 auto;
@@ -225,10 +347,7 @@
       transition: transform 0.2s, opacity 0.2s;
     }
 
-    .btn-capture:hover {
-      transform: scale(1.03);
-      opacity: 0.92;
-    }
+    .btn-capture:hover { transform: scale(1.03); opacity: 0.92; }
 
     .btn-secondary {
       background: transparent;
@@ -241,17 +360,12 @@
       cursor: pointer;
       transition: all 0.2s;
       margin-top: 16px;
+      font-family: inherit;
     }
 
-    .btn-secondary:hover {
-      border-color: #fff;
-      color: #fff;
-    }
+    .btn-secondary:hover { border-color: #fff; color: #fff; }
 
-    .loading-screen {
-      text-align: center;
-      padding: 80px 20px;
-    }
+    .loading-screen { text-align: center; padding: 80px 20px; }
 
     .loading-screen h2 {
       font-size: clamp(28px, 4vw, 40px);
@@ -274,7 +388,8 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .results-header { text-align: center; margin-bottom: 48px; }
+    /* Results */
+    .results-header { text-align: center; margin-bottom: 32px; }
 
     .results-count {
       display: inline-block;
@@ -289,25 +404,118 @@
       margin-bottom: 16px;
     }
 
+    /* Pack offer banner */
+    .pack-banner {
+      max-width: 800px;
+      margin: 0 auto 32px;
+      background: linear-gradient(135deg, #0d0d0d, #161616);
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pack-banner-info { display: flex; align-items: center; gap: 16px; }
+
+    .pack-banner-icon {
+      width: 44px;
+      height: 44px;
+      background-color: #fff;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .pack-banner-text strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .pack-banner-text span { color: #888; font-size: 13px; }
+
+    .btn-pack {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-pack:hover { transform: scale(1.05); }
+
     .photos-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 120px;
     }
 
     .photo-item {
       aspect-ratio: 1;
       background-color: #0d0d0d;
-      border: 1px solid #1a1a1a;
+      border: 2px solid #1a1a1a;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.2s;
     }
 
-    .photo-item:hover { transform: scale(1.02); }
+    .photo-item:hover { transform: scale(1.02); border-color: #333; }
+
+    .photo-item.selected {
+      border-color: #fff;
+      transform: scale(1.02);
+    }
+
+    .photo-item.selected::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .photo-checkbox {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s;
+      z-index: 2;
+    }
+
+    .photo-item.selected .photo-checkbox {
+      background-color: #fff;
+      border-color: #fff;
+      color: #000;
+    }
 
     .photo-placeholder {
       width: 100%;
@@ -348,6 +556,7 @@
       font-weight: 600;
     }
 
+    /* Purchase bar */
     .purchase-bar {
       position: fixed;
       bottom: 24px;
@@ -355,125 +564,150 @@
       transform: translateX(-50%);
       background-color: #fff;
       color: #000;
-      padding: 16px 24px;
+      padding: 14px 20px 14px 24px;
       border-radius: 100px;
-      display: flex;
+      display: none;
       align-items: center;
       gap: 16px;
       box-shadow: 0 20px 50px rgba(255, 255, 255, 0.1);
       z-index: 50;
+      max-width: calc(100% - 32px);
     }
 
-    .purchase-bar .info { font-size: 14px; }
-    .purchase-bar .info strong { font-size: 16px; }
+    .purchase-bar.show { display: flex; }
+
+    .purchase-bar .info { font-size: 13px; line-height: 1.3; }
+    .purchase-bar .info strong { font-size: 16px; display: block; }
+    .purchase-bar .info .saved { color: #16a34a; font-size: 12px; font-weight: 600; }
 
     .purchase-bar button {
       background-color: #000;
       color: #fff;
       border: none;
-      padding: 12px 24px;
+      padding: 12px 22px;
       border-radius: 100px;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: transform 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
     }
 
     .purchase-bar button:hover { transform: scale(1.05); }
 
     @media (max-width: 600px) {
-      nav { padding: 20px 24px; }
-      .container { padding: 90px 20px 120px; }
-      .purchase-bar {
-        left: 16px;
-        right: 16px;
-        transform: none;
-        justify-content: space-between;
-      }
+      nav { padding: 20px 16px; }
+      .nav-right a:not(.lang-current) { display: none; }
+      .container { padding: 90px 16px 140px; }
+      .pack-banner { padding: 16px; }
+      .pack-banner-text strong { font-size: 14px; }
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="index.html" class="logo">Snapme</a>
-    <div class="nav-links">
-      <a href="index.html">← Voltar</a>
+    <a href="index.html" class="logo">SnapMe</a>
+    <div class="nav-right">
+      <a href="index.html" data-i18n="nav_back">← Voltar</a>
+      <div class="lang-selector">
+        <button class="lang-current" onclick="toggleLangDropdown(event)">
+          <span id="currentLangFlag">🇵🇹</span>
+          <span id="currentLangCode">PT</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
+          <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
+          <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
+        </div>
+      </div>
     </div>
   </nav>
 
   <div class="container">
 
+    <!-- TELA 1: Eventos -->
     <div class="screen active" id="screen-events">
-      <div class="step-label">Passo 1 de 3</div>
-      <h1 class="step-title">Onde estiveste?</h1>
-      <p class="step-subtitle">Escolhe o evento para encontrarmos as tuas fotos.</p>
+      <div class="step-label" data-i18n="step_1">Passo 1 de 3</div>
+      <h1 class="step-title" data-i18n="events_title">Onde estiveste?</h1>
+      <p class="step-subtitle" data-i18n="events_subtitle">Escolhe o evento para encontrarmos as tuas fotos.</p>
 
-      <div class="events-grid">
-        <div class="event-card" onclick="escolherEvento('Primavera Sound 2025')">
-          <span class="event-arrow">→</span>
-          <span class="event-status">● Ativo</span>
-          <h3>Primavera Sound</h3>
-          <div class="event-date">5–7 Junho 2025</div>
-          <div class="event-photos">12.847 fotos disponíveis</div>
-        </div>
-
-        <div class="event-card" onclick="escolherEvento('NOS Alive 2025')">
-          <span class="event-arrow">→</span>
-          <span class="event-status">● Ativo</span>
-          <h3>NOS Alive</h3>
-          <div class="event-date">10–12 Julho 2025</div>
-          <div class="event-photos">8.231 fotos disponíveis</div>
-        </div>
-
-        <div class="event-card" onclick="escolherEvento('MEO Sudoeste 2025')">
-          <span class="event-arrow">→</span>
-          <span class="event-status">● Ativo</span>
-          <h3>MEO Sudoeste</h3>
-          <div class="event-date">5–9 Agosto 2025</div>
-          <div class="event-photos">6.402 fotos disponíveis</div>
-        </div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          oninput="filtrarEventos()"
+          data-i18n-placeholder="search_placeholder"
+          placeholder="Pesquisa por nome do evento..."
+        />
       </div>
+
+      <div class="filters">
+        <button class="filter-chip active" data-filter="all" onclick="filtrarPorTipo('all', this)" data-i18n="filter_all">Todos</button>
+        <button class="filter-chip" data-filter="festival" onclick="filtrarPorTipo('festival', this)" data-i18n="filter_festival">Festivais</button>
+        <button class="filter-chip" data-filter="concerto" onclick="filtrarPorTipo('concerto', this)" data-i18n="filter_concert">Concertos</button>
+        <button class="filter-chip" data-filter="desporto" onclick="filtrarPorTipo('desporto', this)" data-i18n="filter_sports">Desporto</button>
+        <button class="filter-chip" data-filter="festa" onclick="filtrarPorTipo('festa', this)" data-i18n="filter_party">Festas</button>
+        <button class="filter-chip" data-filter="teatro" onclick="filtrarPorTipo('teatro', this)" data-i18n="filter_theatre">Teatro</button>
+      </div>
+
+      <div class="events-grid" id="eventsGrid"></div>
+      <div class="no-results" id="noResults" style="display:none;" data-i18n="no_results">Nenhum evento encontrado.</div>
     </div>
 
+    <!-- TELA 2: Câmara -->
     <div class="screen" id="screen-camera">
-      <div class="step-label">Passo 2 de 3</div>
-      <h1 class="step-title">Tira uma selfie.</h1>
-      <p class="step-subtitle">Centra a tua cara no círculo. Boa luz ajuda.</p>
+      <div class="step-label" data-i18n="step_2">Passo 2 de 3</div>
+      <h1 class="step-title" data-i18n="camera_title">Tira uma selfie.</h1>
+      <p class="step-subtitle" data-i18n="camera_subtitle">Centra a tua cara no círculo. Boa luz ajuda.</p>
 
       <div class="camera-wrapper">
         <div class="camera-box">
           <video id="video" autoplay playsinline></video>
           <canvas id="canvas"></canvas>
-          <div class="camera-overlay">
-            <div class="face-guide"></div>
-          </div>
+          <div class="camera-overlay"><div class="face-guide"></div></div>
           <div class="camera-placeholder" id="cameraPlaceholder">
             <div class="camera-placeholder-icon">📷</div>
-            <div>A pedir acesso à câmara...</div>
+            <div data-i18n="camera_loading">A pedir acesso à câmara...</div>
           </div>
         </div>
 
-        <p class="camera-instructions">A tua selfie é usada apenas para identificação. Não é guardada.</p>
-        <button class="btn-capture" id="captureBtn" onclick="capturarSelfie()">Tirar selfie</button>
+        <p class="camera-instructions" data-i18n="camera_privacy">A tua selfie é usada apenas para identificação. Não é guardada.</p>
+        <button class="btn-capture" onclick="capturarSelfie()" data-i18n="camera_btn">Tirar selfie</button>
         <br />
-        <button class="btn-secondary" onclick="voltar('screen-events')">← Voltar</button>
+        <button class="btn-secondary" onclick="voltar('screen-events')" data-i18n="back_btn">← Voltar</button>
       </div>
     </div>
 
+    <!-- TELA 3: Loading -->
     <div class="screen" id="screen-loading">
       <div class="loading-screen">
         <div class="spinner"></div>
-        <h2>A procurar-te...</h2>
-        <p>A analisar milhares de fotos. Demora alguns segundos.</p>
+        <h2 data-i18n="loading_title">A procurar-te...</h2>
+        <p data-i18n="loading_text">A analisar milhares de fotos. Demora alguns segundos.</p>
       </div>
     </div>
 
+    <!-- TELA 4: Resultados -->
     <div class="screen" id="screen-results">
       <div class="results-header">
-        <span class="results-count">● 8 fotos encontradas</span>
-        <h1 class="step-title">Encontrámos-te.</h1>
-        <p class="step-subtitle">Estas são as fotos onde apareces. Compra para descarregar em alta resolução, sem marca de água.</p>
+        <span class="results-count"><span id="totalFotos">0</span> <span data-i18n="results_count">fotos encontradas</span></span>
+        <h1 class="step-title" data-i18n="results_title">Encontrámos-te.</h1>
+        <p class="step-subtitle" data-i18n="results_subtitle">Toca nas fotos que queres comprar. Em alta resolução, sem marca de água.</p>
+      </div>
+
+      <div class="pack-banner" id="packBanner">
+        <div class="pack-banner-info">
+          <div class="pack-banner-icon">★</div>
+          <div class="pack-banner-text">
+            <strong data-i18n="pack_title">Compra todas e poupa</strong>
+            <span><span id="packSaving">0</span><span data-i18n="pack_saving"> € de desconto</span></span>
+          </div>
+        </div>
+        <button class="btn-pack" onclick="selecionarTodas()" data-i18n="pack_btn">Selecionar todas</button>
       </div>
 
       <div class="photos-grid" id="photosGrid"></div>
@@ -481,25 +715,222 @@
 
   </div>
 
-  <div class="purchase-bar" id="purchaseBar" style="display:none;">
+  <div class="purchase-bar" id="purchaseBar">
     <div class="info">
-      <div>Pack completo</div>
-      <strong>8 fotos · 15€</strong>
+      <strong><span id="selectedCount">0</span> <span id="selectedLabel" data-i18n="bar_photos">fotos</span></strong>
+      <span><span id="totalPrice">0</span><span data-i18n="bar_total"> € total</span></span>
+      <span class="saved" id="savedAmount" style="display:none;"><span data-i18n="bar_saved">Poupas </span><span id="savedValue">0</span> €</span>
     </div>
-    <button onclick="comprar()">Comprar →</button>
+    <button onclick="comprar()" data-i18n="bar_btn">Comprar →</button>
   </div>
 
   <script>
+    // ============ DADOS ============
+    const eventos = [
+      { id: 1, nome: "Primavera Sound", data: "5–7 Junho 2025", fotos: 12847, tipo: "festival", status: "ativo" },
+      { id: 2, nome: "NOS Alive", data: "10–12 Julho 2025", fotos: 8231, tipo: "festival", status: "ativo" },
+      { id: 3, nome: "MEO Sudoeste", data: "5–9 Agosto 2025", fotos: 6402, tipo: "festival", status: "ativo" },
+      { id: 4, nome: "Rock in Rio Lisboa", data: "21–29 Junho 2026", fotos: 0, tipo: "festival", status: "ativo" },
+      { id: 5, nome: "FC Porto vs SL Benfica", data: "12 Outubro 2025", fotos: 4521, tipo: "desporto", status: "ativo" },
+      { id: 6, nome: "Sporting CP vs FC Porto", data: "28 Setembro 2025", fotos: 3892, tipo: "desporto", status: "ativo" },
+      { id: 7, nome: "Coldplay no Estádio Nacional", data: "20 Maio 2026", fotos: 9123, tipo: "concerto", status: "ativo" },
+      { id: 8, nome: "Sunset Boat Party Lisboa", data: "Todas as Sextas", fotos: 1247, tipo: "festa", status: "ativo" },
+      { id: 9, nome: "Os Lusíadas — Teatro D. Maria II", data: "Setembro 2025", fotos: 412, tipo: "teatro", status: "ativo" }
+    ];
+
+    let filtroAtual = "all";
+    let pesquisaAtual = "";
     let stream = null;
+    let eventoSelecionado = null;
+    const PRECO_FOTO = 3;
+    const PRECO_PACK = 15;
+    let totalFotosEncontradas = 0;
+    let fotosSelecionadas = new Set();
+
+    // ============ TRADUÇÕES ============
+    const translations = {
+      pt: {
+        nav_back: "← Voltar",
+        step_1: "Passo 1 de 3", step_2: "Passo 2 de 3",
+        events_title: "Onde estiveste?",
+        events_subtitle: "Escolhe o evento para encontrarmos as tuas fotos.",
+        search_placeholder: "Pesquisa por nome do evento...",
+        filter_all: "Todos", filter_festival: "Festivais", filter_concert: "Concertos",
+        filter_sports: "Desporto", filter_party: "Festas", filter_theatre: "Teatro",
+        no_results: "Nenhum evento encontrado.",
+        camera_title: "Tira uma selfie.",
+        camera_subtitle: "Centra a tua cara no círculo. Boa luz ajuda.",
+        camera_loading: "A pedir acesso à câmara...",
+        camera_privacy: "A tua selfie é usada apenas para identificação. Não é guardada.",
+        camera_btn: "Tirar selfie", back_btn: "← Voltar",
+        loading_title: "A procurar-te...",
+        loading_text: "A analisar milhares de fotos. Demora alguns segundos.",
+        results_count: "fotos encontradas",
+        results_title: "Encontrámos-te.",
+        results_subtitle: "Toca nas fotos que queres comprar. Em alta resolução, sem marca de água.",
+        pack_title: "Compra todas e poupa",
+        pack_saving: " € de desconto",
+        pack_btn: "Selecionar todas",
+        bar_photos: "fotos", bar_photo: "foto",
+        bar_total: " € total", bar_saved: "Poupas ",
+        bar_btn: "Comprar →",
+        ativo: "Ativo", fotos_disponiveis: "fotos disponíveis",
+        type_festival: "Festival", type_concerto: "Concerto",
+        type_desporto: "Desporto", type_festa: "Festa", type_teatro: "Teatro"
+      },
+      en: {
+        nav_back: "← Back",
+        step_1: "Step 1 of 3", step_2: "Step 2 of 3",
+        events_title: "Where were you?",
+        events_subtitle: "Pick your event so we can find your photos.",
+        search_placeholder: "Search by event name...",
+        filter_all: "All", filter_festival: "Festivals", filter_concert: "Concerts",
+        filter_sports: "Sports", filter_party: "Parties", filter_theatre: "Theatre",
+        no_results: "No events found.",
+        camera_title: "Take a selfie.",
+        camera_subtitle: "Center your face in the circle. Good light helps.",
+        camera_loading: "Requesting camera access...",
+        camera_privacy: "Your selfie is used only for identification. Not stored.",
+        camera_btn: "Take selfie", back_btn: "← Back",
+        loading_title: "Finding you...",
+        loading_text: "Analyzing thousands of photos. Takes a few seconds.",
+        results_count: "photos found",
+        results_title: "We found you.",
+        results_subtitle: "Tap the photos you want. High-res, no watermark.",
+        pack_title: "Buy all and save",
+        pack_saving: " € off",
+        pack_btn: "Select all",
+        bar_photos: "photos", bar_photo: "photo",
+        bar_total: " € total", bar_saved: "You save ",
+        bar_btn: "Buy →",
+        ativo: "Active", fotos_disponiveis: "photos available",
+        type_festival: "Festival", type_concerto: "Concert",
+        type_desporto: "Sports", type_festa: "Party", type_teatro: "Theatre"
+      },
+      es: {
+        nav_back: "← Volver",
+        step_1: "Paso 1 de 3", step_2: "Paso 2 de 3",
+        events_title: "¿Dónde estuviste?",
+        events_subtitle: "Elige el evento para encontrar tus fotos.",
+        search_placeholder: "Busca por nombre del evento...",
+        filter_all: "Todos", filter_festival: "Festivales", filter_concert: "Conciertos",
+        filter_sports: "Deportes", filter_party: "Fiestas", filter_theatre: "Teatro",
+        no_results: "No se encontraron eventos.",
+        camera_title: "Hazte un selfie.",
+        camera_subtitle: "Centra tu cara en el círculo. Buena luz ayuda.",
+        camera_loading: "Solicitando acceso a la cámara...",
+        camera_privacy: "Tu selfie se usa solo para identificación. No se guarda.",
+        camera_btn: "Hacer selfie", back_btn: "← Volver",
+        loading_title: "Buscándote...",
+        loading_text: "Analizando miles de fotos. Tarda unos segundos.",
+        results_count: "fotos encontradas",
+        results_title: "Te encontramos.",
+        results_subtitle: "Toca las fotos que quieras. Alta resolución, sin marca de agua.",
+        pack_title: "Compra todas y ahorra",
+        pack_saving: " € de descuento",
+        pack_btn: "Seleccionar todas",
+        bar_photos: "fotos", bar_photo: "foto",
+        bar_total: " € total", bar_saved: "Ahorras ",
+        bar_btn: "Comprar →",
+        ativo: "Activo", fotos_disponiveis: "fotos disponibles",
+        type_festival: "Festival", type_concerto: "Concierto",
+        type_desporto: "Deportes", type_festa: "Fiesta", type_teatro: "Teatro"
+      }
+    };
+
+    const flags = { pt: "🇵🇹", en: "🇬🇧", es: "🇪🇸" };
+    const codes = { pt: "PT", en: "EN", es: "ES" };
+    let currentLang = "pt";
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("snapme_lang", lang);
+      document.documentElement.lang = lang;
+      document.getElementById("currentLangFlag").textContent = flags[lang];
+      document.getElementById("currentLangCode").textContent = codes[lang];
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (translations[lang][key]) el.placeholder = translations[lang][key];
+      });
+
+      document.getElementById("langDropdown").classList.remove("show");
+      renderEventos();
+    }
+
+    function toggleLangDropdown(event) {
+      event.stopPropagation();
+      document.getElementById("langDropdown").classList.toggle("show");
+    }
+
+    document.addEventListener("click", () => {
+      document.getElementById("langDropdown").classList.remove("show");
+    });
+
+    // ============ EVENTOS ============
+    function renderEventos() {
+      const grid = document.getElementById("eventsGrid");
+      const noResults = document.getElementById("noResults");
+      grid.innerHTML = "";
+
+      const filtrados = eventos.filter(e => {
+        const matchTipo = filtroAtual === "all" || e.tipo === filtroAtual;
+        const matchPesquisa = e.nome.toLowerCase().includes(pesquisaAtual.toLowerCase());
+        return matchTipo && matchPesquisa;
+      });
+
+      if (filtrados.length === 0) {
+        noResults.style.display = "block";
+        return;
+      }
+      noResults.style.display = "none";
+
+      const t = translations[currentLang];
+
+      filtrados.forEach(e => {
+        const tipoLabel = t["type_" + e.tipo];
+        const card = document.createElement("div");
+        card.className = "event-card";
+        card.onclick = () => escolherEvento(e);
+        card.innerHTML = `
+          <span class="event-arrow">→</span>
+          <span class="event-status">● ${t.ativo}</span>
+          <div class="event-type">${tipoLabel}</div>
+          <h3>${e.nome}</h3>
+          <div class="event-date">${e.data}</div>
+          <div class="event-photos">${e.fotos.toLocaleString()} ${t.fotos_disponiveis}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filtrarEventos() {
+      pesquisaAtual = document.getElementById("searchInput").value;
+      renderEventos();
+    }
+
+    function filtrarPorTipo(tipo, btn) {
+      filtroAtual = tipo;
+      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      renderEventos();
+    }
 
     function mostrarTela(id) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById(id).classList.add("active");
-      document.getElementById("purchaseBar").style.display = id === "screen-results" ? "flex" : "none";
+      const bar = document.getElementById("purchaseBar");
+      if (id === "screen-results" && fotosSelecionadas.size > 0) bar.classList.add("show");
+      else bar.classList.remove("show");
     }
 
-    function escolherEvento(nome) {
-      console.log("Festival escolhido:", nome);
+    function escolherEvento(evento) {
+      eventoSelecionado = evento;
       mostrarTela("screen-camera");
       iniciarCamara();
     }
@@ -508,26 +939,16 @@
       const video = document.getElementById("video");
       const placeholder = document.getElementById("cameraPlaceholder");
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user" },
-          audio: false
-        });
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
         video.srcObject = stream;
         placeholder.style.display = "none";
       } catch (err) {
-        console.error("Erro câmara:", err);
-        placeholder.innerHTML = `
-          <div class="camera-placeholder-icon">⚠️</div>
-          <div>Não conseguimos aceder à câmara.<br />Verifica as permissões do browser.</div>
-        `;
+        placeholder.innerHTML = `<div class="camera-placeholder-icon">⚠️</div><div>Não conseguimos aceder à câmara.</div>`;
       }
     }
 
     function pararCamara() {
-      if (stream) {
-        stream.getTracks().forEach(t => t.stop());
-        stream = null;
-      }
+      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
     }
 
     function capturarSelfie() {
@@ -536,10 +957,8 @@
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       canvas.getContext("2d").drawImage(video, 0, 0);
-
       pararCamara();
       mostrarTela("screen-loading");
-
       setTimeout(() => {
         gerarResultados();
         mostrarTela("screen-results");
@@ -547,17 +966,89 @@
     }
 
     function gerarResultados() {
+      // Simular nº aleatório de fotos (entre 3 e 12)
+      totalFotosEncontradas = Math.floor(Math.random() * 10) + 3;
+      fotosSelecionadas.clear();
+      document.getElementById("totalFotos").textContent = totalFotosEncontradas;
+
       const grid = document.getElementById("photosGrid");
       grid.innerHTML = "";
-      for (let i = 1; i <= 8; i++) {
+      for (let i = 1; i <= totalFotosEncontradas; i++) {
         const photo = document.createElement("div");
         photo.className = "photo-item";
+        photo.dataset.id = i;
+        photo.onclick = () => togglePhoto(i, photo);
         photo.innerHTML = `
+          <div class="photo-checkbox">✓</div>
           <div class="photo-placeholder">Foto ${i}</div>
           <div class="photo-watermark">SNAPME</div>
-          <div class="photo-price">3€</div>
+          <div class="photo-price">${PRECO_FOTO}€</div>
         `;
         grid.appendChild(photo);
+      }
+
+      atualizarPackBanner();
+      atualizarBarra();
+    }
+
+    function togglePhoto(id, el) {
+      if (fotosSelecionadas.has(id)) {
+        fotosSelecionadas.delete(id);
+        el.classList.remove("selected");
+      } else {
+        fotosSelecionadas.add(id);
+        el.classList.add("selected");
+      }
+      atualizarBarra();
+    }
+
+    function selecionarTodas() {
+      fotosSelecionadas.clear();
+      document.querySelectorAll(".photo-item").forEach(el => {
+        const id = parseInt(el.dataset.id);
+        fotosSelecionadas.add(id);
+        el.classList.add("selected");
+      });
+      atualizarBarra();
+    }
+
+    function atualizarPackBanner() {
+      const banner = document.getElementById("packBanner");
+      const precoIndividual = totalFotosEncontradas * PRECO_FOTO;
+      const poupanca = precoIndividual - PRECO_PACK;
+
+      // Só mostra se compensa o pack (ou seja, se tem mais de 5 fotos)
+      if (totalFotosEncontradas >= 6) {
+        banner.style.display = "flex";
+        document.getElementById("packSaving").textContent = poupanca;
+      } else {
+        banner.style.display = "none";
+      }
+    }
+
+    function atualizarBarra() {
+      const n = fotosSelecionadas.size;
+      const bar = document.getElementById("purchaseBar");
+      const t = translations[currentLang];
+
+      if (n === 0) { bar.classList.remove("show"); return; }
+      bar.classList.add("show");
+
+      const precoIndividual = n * PRECO_FOTO;
+      const aplicarPack = n === totalFotosEncontradas && totalFotosEncontradas >= 6;
+      const total = aplicarPack ? PRECO_PACK : precoIndividual;
+      const poupanca = precoIndividual - total;
+
+      document.getElementById("selectedCount").textContent = n;
+      document.getElementById("selectedLabel").textContent = n === 1 ? t.bar_photo : t.bar_photos;
+      document.getElementById("totalPrice").textContent = total;
+
+      const savedEl = document.getElementById("savedAmount");
+      if (poupanca > 0) {
+        savedEl.style.display = "inline";
+        document.getElementById("savedValue").textContent = poupanca;
+      } else {
+        savedEl.style.display = "none";
       }
     }
 
@@ -567,8 +1058,23 @@
     }
 
     function comprar() {
+      const n = fotosSelecionadas.size;
+      const aplicarPack = n === totalFotosEncontradas && totalFotosEncontradas >= 6;
+      const total = aplicarPack ? PRECO_PACK : n * PRECO_FOTO;
+
+      // Guardar para o checkout
+      sessionStorage.setItem("snapme_purchase", JSON.stringify({
+        evento: eventoSelecionado?.nome || "",
+        fotos: n,
+        total: total,
+        aplicarPack: aplicarPack
+      }));
       window.location.href = "checkout.html";
     }
+
+    // INIT
+    const savedLang = localStorage.getItem("snapme_lang") || "pt";
+    setLang(savedLang);
   </script>
 
 </body>
